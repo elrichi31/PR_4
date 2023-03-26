@@ -54,7 +54,7 @@ public class Client extends Application {
         panelEnviar.setSpacing(10);
 
         comboDestinatario = new ComboBox<>();
-        comboDestinatario.getItems().addAll("todos", "usuario1", "usuario2", "usuario3");
+        comboDestinatario.getItems().add("todos");
         comboDestinatario.getSelectionModel().selectFirst();
         panelEnviar.getChildren().add(comboDestinatario);
 
