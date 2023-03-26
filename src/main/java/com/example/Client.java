@@ -87,8 +87,16 @@ public class Client extends Application {
                 userNameString = nombre;
                 Thread t = new Thread(new ManejadorServidor());
                 t.start(); 
+                primaryStage.setOnCloseRequest(e -> {
+                    try {
+                        cliente.close();
+                    } catch (IOException e1) {
+                        System.out.println("Desconectado del servidor");
+                    }
+                });
             } catch (IOException err) {
-                err.printStackTrace();
+                System.out.println("Desconectado del servidor");
+                //err.printStackTrace();
             }
         });
         
@@ -122,9 +130,6 @@ public class Client extends Application {
         comboDestinatario.getSelectionModel().selectFirst();
     }
     
-    private void mostrarMensaje(String mensaje) {
-        areaChat.appendText(mensaje + "\n");
-    }
     private class ManejadorServidor implements Runnable {
         @Override
         public void run() {
@@ -140,7 +145,8 @@ public class Client extends Application {
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                System.out.println("Error al enviar el mensaje o al actualizar lista de usuarios");
+                //e.printStackTrace();
             }
         }
     }
