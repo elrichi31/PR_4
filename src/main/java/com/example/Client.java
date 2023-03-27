@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.List;
 import java.util.Arrays;
 
 
@@ -29,8 +28,6 @@ public class Client extends Application {
     private TextArea areaChat;
     private ComboBox<String> comboDestinatario;
     String userNameString;
-    private List<String> destinatarios;
-
 
     public static void main(String[] args) {
         launch(args);
@@ -46,7 +43,6 @@ public class Client extends Application {
         scrollPane.setFitToWidth(true);
         scrollPane.setFitToHeight(true);
         panelPrincipal.getChildren().add(scrollPane);
-        //panelPrincipal.setAlignment(Pos.CENTER);
 
         HBox panelEnviar = new HBox();
         panelEnviar.setAlignment(Pos.CENTER_LEFT);
@@ -100,12 +96,10 @@ public class Client extends Application {
             }
         });
         
-        Scene scene = new Scene(panelPrincipal, 600, 400);
+        Scene scene = new Scene(panelPrincipal, 600, 300);
         primaryStage.setTitle("Cliente " + userNameString);
         primaryStage.setScene(scene);
         primaryStage.show();
-
-        
     }
     private void enviarMensaje(String destinatario, String mensaje) {
         try {
