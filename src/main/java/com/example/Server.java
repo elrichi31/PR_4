@@ -93,9 +93,13 @@ public class Server extends Application {
         
             Optional<String> result = dialog.showAndWait();
             result.ifPresent(nombreUsuario -> {
+                cerrarConexion(nombreUsuario);
                 clientes.remove(nombreUsuario);
+                
                 logTextArea.appendText("Usuario " + nombreUsuario + " eliminado.\n");
                 enviarListaUsuarios();
+                actualizarListaUsuariosConectados();
+
             });
         });
         
@@ -217,6 +221,16 @@ public class Server extends Application {
             logTextArea.appendText(String.format("Mensajes de %s borrados.\n", usuario));
         } else {
             logTextArea.appendText(String.format("El usuario %s no tiene mensajes que borrar.\n", usuario));
+        }
+    }
+
+    public void cerrarConexion(String origen){
+        ObjectOutputStream cliente = clientes.get(origen);
+        try {
+            cliente.writeObject("eliminado");
+            cliente.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

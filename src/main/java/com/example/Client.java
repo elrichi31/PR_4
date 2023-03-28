@@ -28,7 +28,8 @@ public class Client extends Application {
     private TextArea areaChat;
     private ComboBox<String> comboDestinatario;
     String userNameString;
-
+    Socket cliente;
+    HBox panelEnviar = new HBox();
     public static void main(String[] args) {
         launch(args);
     }
@@ -44,7 +45,7 @@ public class Client extends Application {
         scrollPane.setFitToHeight(true);
         panelPrincipal.getChildren().add(scrollPane);
 
-        HBox panelEnviar = new HBox();
+        
         panelEnviar.setAlignment(Pos.CENTER_LEFT);
         panelEnviar.setPadding(new Insets(10));
         panelEnviar.setSpacing(10);
@@ -75,7 +76,7 @@ public class Client extends Application {
         dialogo.setContentText("Ingrese su nombre de usuario:");
         dialogo.showAndWait().ifPresent(nombre ->{
             try {
-                Socket cliente = new Socket("localhost", 1234);
+                cliente = new Socket("localhost", 1234);
                 salida = new ObjectOutputStream(cliente.getOutputStream());
                 entrada = new ObjectInputStream(cliente.getInputStream());
                 salida.writeObject(nombre);
@@ -100,7 +101,9 @@ public class Client extends Application {
         primaryStage.setTitle("Cliente " + userNameString);
         primaryStage.setScene(scene);
         primaryStage.show();
+
     }
+
     private void enviarMensaje(String destinatario, String mensaje) {
         try {
             salida.writeObject(destinatario + ":" + mensaje);
@@ -132,7 +135,16 @@ public class Client extends Application {
                     Object mensaje = entrada.readObject();
                     if (mensaje instanceof String) {
                         // mensaje de chat
-                        areaChat.appendText((String) mensaje + "\n");
+                        System.out.println(mensaje);
+                        if(mensaje.equals("eliminado")){
+                            entrada.close();
+                            salida.close();
+                            cliente.close();
+                            System.out.println("Desconectado del servidor");
+                            panelEnviar.getChildren().clear();
+                        } else {
+                            areaChat.appendText((String) mensaje + "\n");
+                        }
                     } else if (mensaje instanceof String[]) {
                         // lista de usuarios
                         actualizarListaUsuarios((String[]) mensaje);
